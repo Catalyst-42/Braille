@@ -4,7 +4,7 @@ from pathlib import Path
 
 # 'A' means that next glyph is capital
 # 'N' means that next glyph is numerical
-ALPHABET = ' abcdefghijklmnopqrstuvwxyzAN.,?;!""()-'
+ALPHABET = " abcdefghijklmnopqrstuvwxyzAN.,?;!''()-"
 
 # In Braille numbers described with letters
 NUMBERS = 'jabcdefghi'  # 0-9
@@ -46,48 +46,35 @@ def create_output_image(width_tiles: int) -> np.ndarray:
     )
 
 def insert_tile(image: np.ndarray, tile: np.ndarray, position: int) -> np.ndarray:
+    """Inserts tile on image by given position."""
     left = position * tile_width
     right = left + tile_width
-
-    # Ensure we don't exceed image bounds
-    if right > image.shape[1]:
-        # Calculate required additional width
-        additional_width = right - image.shape[1]
-
-        # Create new image with extended width
-        new_width = image.shape[1] + additional_width
-        new_image = np.zeros(
-            (image.shape[0], new_width, image.shape[2]),
-            dtype=image.dtype
-        )
-
-        # Copy existing content
-        new_image[:, :image.shape[1]] = image
-        image = new_image
 
     # Insert the tile
     image[:, left:right] = tile
     return image
 
 def text_to_braille(text: str) -> np.ndarray:
-    """Convert text to braille image with dynamic width"""
+    """Convert text to braille image with dynamic width."""
     tiles_needed = []
     is_numerical_sequence = False
 
     # First pass: calculate needed tiles
     for char in text:
-        # If text are combined with char, add semicolon
-        # 123abc -> 123;abc
-        if is_numerical_sequence and char.isalpha():
-            tiles_needed.append(';')
-
         # Check for capital letter prefix each before capital
-        # MIR -> AmAiAr
+        # AIR -> AaAiAr
         if char.isupper():
             tiles_needed.append('A')
             char = char.lower()
 
+        # If text are combined with char, add semicolon
+        # 123abc -> 123;abc
+        if is_numerical_sequence and char.isalpha():
+            tiles_needed.append(';')
+            is_numerical_sequence = False
+
         # Check for numerical prefix
+        # 12 -> Nab
         if char.isdigit():
             if not is_numerical_sequence:
                 tiles_needed.append('N')
@@ -95,16 +82,16 @@ def text_to_braille(text: str) -> np.ndarray:
 
             char = NUMBERS[int(char)]
 
-        # Check for exit from numerical mode
+        # Check on exit from numerical mode
         if is_numerical_sequence and char == ' ':
             is_numerical_sequence = False
 
-        # Add actual character tile
-        if char in char_to_tile:
-            tiles_needed.append(char)
-        else:
-            print(f'Warning: char "{char}" not in alphabet, using space')
-            tiles_needed.append(' ')
+        # Add character tile
+        if char not in char_to_tile:
+            print(f'Warning: char "{char}" not in alphabet')
+            continue
+
+        tiles_needed.append(char)
 
     # Create output image with calculated size
     out_image = create_output_image(len(tiles_needed))
@@ -117,13 +104,11 @@ def text_to_braille(text: str) -> np.ndarray:
 
     return out_image
 
-# Process input to tiles
-in_text: str = input('Input: ')
-
 # Generate braille image
+in_text: str = input('Input: ')
 out_image = text_to_braille(in_text)
 
 # Save result
 result_pil = Image.fromarray(out_image)
 result_pil.save('output.png')
-print(f"Output saved to output.png (size: {out_image.shape[1]}x{out_image.shape[0]})")
+print("Done")
