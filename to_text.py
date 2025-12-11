@@ -45,30 +45,30 @@ for char, tile in zip(ALPHABET, tiles):
 def extract_tiles_from_image(image: np.ndarray) -> list:
     """Extract individual braille tiles from image."""
     image_height, image_width = image.shape[:2]
-    
+
     # Validate image dimensions
     if image_height != tile_height:
         raise ValueError(f"Image height {image_height} doesn't match tile height {tile_height}")
-    
+
     tiles_count = image_width // tile_width
     extracted_tiles = []
-    
+
     for i in range(tiles_count):
         left = i * tile_width
         right = left + tile_width
         tile = image[:, left:right]
         extracted_tiles.append(tile)
-    
+
     return extracted_tiles
 
 def tile_to_char(tile: np.ndarray) -> str:
     """Find exact match for tile using byte representation."""
     tile_bytes = tile.tobytes()
-    
+
     # Direct lookup in the dictionary
     if tile_bytes in tile_data_to_char:
         return tile_data_to_char[tile_bytes]
-    
+
     # If not found (should not happen with noise-free images)
     return '?'
 
@@ -76,40 +76,40 @@ def braille_to_text(image_path: str) -> str:
     """Convert braille image back to text."""
     # Load the braille image
     braille_image = np.array(Image.open(image_path))
-    
+
     # Extract individual braille tiles
     braille_tiles = extract_tiles_from_image(braille_image)
-    
+
     # Convert tiles to characters using exact matching
     braille_chars = [tile_to_char(tile) for tile in braille_tiles]
-    
+
     # Process special symbols and reconstruct text
     text_chars = []
     is_capital_next = False
     is_numerical_mode = False
-    
+
     for char in braille_chars:
         # Handle capital letter prefix
         if char == 'A':
             is_capital_next = True
             continue
-        
+
         # Handle numerical mode prefix
         if char == 'N':
             is_numerical_mode = True
             continue
-        
+
         # Handle numerical mode exit
         if char == ';' and is_numerical_mode:
             is_numerical_mode = False
             continue
-        
+
         # Convert number back from letter representation
         if is_numerical_mode and char in NUMBERS:
             digit = str(NUMBERS.index(char))
             text_chars.append(digit)
             continue
-        
+
         # Apply capital letter if needed
         if is_capital_next and char.isalpha():
             text_chars.append(char.upper())
@@ -117,11 +117,11 @@ def braille_to_text(image_path: str) -> str:
         else:
             text_chars.append(char)
             is_capital_next = False
-        
+
         # Exit numerical mode on space
         if char == ' ':
             is_numerical_mode = False
-    
+
     # Join all characters into final text
     result_text = ''.join(text_chars)
     return result_text

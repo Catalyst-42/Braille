@@ -1,6 +1,9 @@
 # Braille
 Simple generated scripts to convert text into braille image and braille image back to text. Make on Python with numpy and Pillow. To use, install dependencies first:
 
+> [!Warning]
+This code is clean, but highly AI generated, don't use it to learning purposes
+
 ```
 pip3 install -r requirements.txt
 ```
