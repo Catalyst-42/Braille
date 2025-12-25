@@ -2,7 +2,7 @@
 Simple generated scripts to convert text into braille image and braille image back to text. Make on Python with numpy and Pillow. To use, install dependencies first:
 
 > [!Warning]
-This code is clean, but highly AI generated, don't use it to learning purposes
+This code is clean, but highly AI generated, don't use it in learning purposes
 
 ```
 pip3 install -r requirements.txt
@@ -13,12 +13,14 @@ To encode image use `to_braille` script. It will demand an input text and will o
 
 | ` abcdefghijklmnopqrstuvwxyzAN.,?;!''()-` |
 |-|
-| ![Example of tiles](img/tiles_example.png) |
+| ![Example of english tiles](img/tiles_example_en.png) |
+| ` абвгдеёжзийклмнопрстуфхцчшщъыьэюя.!-«»(),?AaLlGgN` |
+| ![Example of russian tiles](img/tiles_example_ru.png) |
 
-You also can use capital letters and digits from zero to nine, but they will be encoded by Braille 1 rules. In output you will get an image, created with glyphs of tileset.
+You also can use capital letters and digits from zero to nine, but they will be encoded by Braille 1 rules (numbers are encoded with letters from the beginning of the alphabet). In output you will get an image, created with glyphs of tileset.
 
 ## Converting from Braille
-To convert image from braille you need to initially get clear image, which intains characted, mapped on tileset. All glyphs must be located in one line. Internally Braille uses codes to describe special charactes. There's two types of them: capital letters and numericals.
+To convert image from braille you need to initially get clear image, which intains exact characters, mapped on tileset. All glyphs must be located in one line. Internally Braille uses codes to describe special charactes. There's two types of them: capital letters and numericals.
 
 Rules for capital letters:
 - Each capital letter should be prepended with capital letter sign "A".
@@ -31,9 +33,9 @@ mIxEd -> mAixAed
 ```
 
 Rules for numbers:
-- Numbers are encoded with letters (a.e. 112 is aab)
+- Numbers are encoded with letters (a.e. `112` is `aab`)
 - Number sequence must be prepended with number sequence sign "N".
-- Number sequence breaks on space or on alpha symbol (a.e 1a2b is N)
+- Number sequence breaks on space or on alpha symbol (a.e `1a2b` is `N`)
 
 Examples:
 ```
@@ -44,4 +46,13 @@ Examples:
 ```
 
 > [!NOTE]  
-> when creating text you dont need to pass special signs to describe sequences of capital letters and numericals. When you converting braille image back to text you need to read text according to rules, described above.
+> When creating braille image, you dont need to pass special signs to describe sequences of capital letters and numericals. When you converting braille image back to text you need to read text according to rules, described above.
+
+<!-- I will update this repo later cuz now it's in alpha... and I'm sick now... :p -->
+
+<!-- 
+TODO:
+- [ ] Argparse / settings
+- [ ] Born english and russian
+- [ ] Auto detect in image by grayscale?
+ -->
