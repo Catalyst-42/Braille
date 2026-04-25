@@ -48,11 +48,13 @@ Examples:
 > [!NOTE]  
 > When creating braille image, you dont need to pass special signs to describe sequences of capital letters and numericals. When you converting braille image back to text you need to read text according to rules, described above.
 
-<!-- I will update this repo later cuz now it's in alpha... and I'm sick now... :p -->
-
 <!-- 
 TODO:
 - [ ] Argparse / settings
 - [ ] Born english and russian
 - [ ] Auto detect in image by grayscale?
+
+- [ ] Сдвиг влево на 1 пиксель или вправо + инверсия для расшивровки, input файл для расшифровки
  -->
+
+<!-- I will update this repo later cuz now it's in alpha... and I'm sick now... :p -->

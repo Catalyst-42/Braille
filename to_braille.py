@@ -5,13 +5,13 @@ from pathlib import Path
 # English
 # 'A' means that next glyph is capital
 # 'N' means that next glyph is numerical
-# ALPHABET = ' abcdefghijklmnopqrstuvwxyzAN.,?;!""()-'
+ALPHABET = ' abcdefghijklmnopqrstuvwxyzAN.,?;!""()-'
 
 # In Braille numbers described with letters
-# NUMBERS = 'jabcdefghi'  # 0-9
+NUMBERS = 'jabcdefghi'  # 0-9
 
 # Get parts and create tilemap
-# PARTS = Path('./parts/2_3_english_tight.png')
+PARTS = Path('./parts/2_3_english_tight.png')
 
 
 # Russian
@@ -22,11 +22,11 @@ from pathlib import Path
 # 'G' means that next glyph is capital greek
 # 'g' means that next glyph is small greek
 # 'N' means that next glyph is numerical
-ALPHABET = ' абвгдеёжзийклмнопрстуфхцчшщъыьэюя.!-""(),?AaLlGgN;'
-NUMBERS = 'абвгдеёжзи'
+# ALPHABET = ' абвгдеёжзийклмнопрстуфхцчшщъыьэюя.!-""(),?AaLlGgN;'
+# NUMBERS = 'абвгдеёжзи'
 
 # Get parts and create tilemap
-PARTS = Path('./parts/2_3_russian_tight.png')
+# PARTS = Path('./parts/2_3_russian_tight.png')
 
 tile_width, tile_height, *_ = PARTS.stem.split('_')
 tile_width = int(tile_width)
