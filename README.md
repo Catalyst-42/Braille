@@ -1,60 +1,82 @@
 # Braille
-Simple generated scripts to convert text into braille image and braille image back to text. Make on Python with numpy and Pillow. To use, install dependencies first:
+A simple tool to translate Russian and Latin (English) text to the Braille encoded image and translate this images back to human readable text. Engine are separated from GUI, so you also may to use it directly. 
 
-> [!Warning]
-This code is clean, but highly AI generated, don't use it in learning purposes
+## Images
+Encoding tab
 
-```
+![Braille text encoding](<img/Braille - Encode.png>)
+
+Decoding tab
+
+![Braille text decoding](<img/Braille - Decode.png>) 
+
+## Installation
+Application build on Python of version 3.14. Uses Pillow and numpy for image generation and recognition. To install dependencies use pip:
+
+```sh
 pip3 install -r requirements.txt
 ```
 
-## Converting to Braille
-To encode image use `to_braille` script. It will demand an input text and will output converted image. Image will be located at script folder and will be named `output.png`. Braille glyphs used to create image are stored in `parts` folder. The list of available glyphs is:
+> [!NOTE]
+> To run GUI application you also need to have Tkinter installed. Installation method depends on your operating system and Python installation type
 
-| ` abcdefghijklmnopqrstuvwxyzAN.,?;!''()-` |
-|-|
-| ![Example of english tiles](img/tiles_example_en.png) |
-| ` абвгдеёжзийклмнопрстуфхцчшщъыьэюя.!-«»(),?AaLlGgN` |
-| ![Example of russian tiles](img/tiles_example_ru.png) |
+## Usage
+After installation simply run `gui.py` as common script:
 
-You also can use capital letters and digits from zero to nine, but they will be encoded by Braille 1 rules (numbers are encoded with letters from the beginning of the alphabet). In output you will get an image, created with glyphs of tileset.
-
-## Converting from Braille
-To convert image from braille you need to initially get clear image, which intains exact characters, mapped on tileset. All glyphs must be located in one line. Internally Braille uses codes to describe special charactes. There's two types of them: capital letters and numericals.
-
-Rules for capital letters:
-- Each capital letter should be prepended with capital letter sign "A".
-
-Examples:
-```
-Hello -> Ahello
-WIP   -> AwAiAp
-mIxEd -> mAixAed
+```sh
+python3 gui.py
 ```
 
-Rules for numbers:
-- Numbers are encoded with letters (a.e. `112` is `aab`)
-- Number sequence must be prepended with number sequence sign "N".
-- Number sequence breaks on space or on alpha symbol (a.e `1a2b` is `N`)
+Also you may use engine directly just by importing function you need:
 
-Examples:
+```python
+from braille import (
+    braille_to_image,
+    braille_to_text,
+    image_to_braille,
+    image_to_text,
+    text_to_braille,
+    text_to_image,
+)
+
+# Text to image
+text = input('Text: ')
+braille = text_to_braille(text)
+image = text_to_image(text)
+print('Braille:', braille)
+print('Image:', image)
+
+print()
+
+# Image to text
+braille = image_to_braille(image)
+text = image_to_text(image)
+print("Decoding image:", image)
+print("Decoded text:", text)
+print("Decoded braille:", braille)
+
+print()
+
+# Codes manupulation
+braille = ["NEXT_CAPITAL_LATIN", "e", "x", "a", "m", "p", "l", "e"]
+text = braille_to_text(braille)
+image = braille_to_image(braille)
+print("Custom codes:", braille)
+print("Custom text:", text)
+print("Custom image", image)
 ```
-100 cats -> Najj cats
-1ac      -> Na;c
-500,000  -> Nejj,jjj
-4C       -> Nd;Ac
+
+## Notes
+Braille may use one key representation for different letters. Do distinct the language, we use the `NEXT_` / `SMALL_` or `CAPITAL_` / `LATIN` or `RUSSIAN` letter codes. To better understand how this codes works in system, check the `braille_test` file.
+
+To test the app, you should additionally install `pytest`:
+
+```sh
+pip install pytest
 ```
 
-> [!NOTE]  
-> When creating braille image, you dont need to pass special signs to describe sequences of capital letters and numericals. When you converting braille image back to text you need to read text according to rules, described above.
+And run them in project root folder:
 
-<!-- 
-TODO:
-- [ ] Argparse / settings
-- [ ] Born english and russian
-- [ ] Auto detect in image by grayscale?
-
-- [ ] Сдвиг влево на 1 пиксель или вправо + инверсия для расшивровки, input файл для расшифровки
- -->
-
-<!-- I will update this repo later cuz now it's in alpha... and I'm sick now... :p -->
+```
+pytest
+```
