@@ -172,6 +172,9 @@ def text_to_braille(text: str) -> list:
 
             braille.append(SEPARATORS[letter])
 
+        elif letter in PUNCTUATION:
+            braille.append(PUNCTUATION[letter])
+
         elif letter in NUMBERS:
             if state != 'number':
                 braille.append(CONTROLS['NEXT_NUMBER'])
@@ -179,18 +182,17 @@ def text_to_braille(text: str) -> list:
             braille.append(NUMBERS[letter])
             state = 'number'
 
-        elif letter in PUNCTUATION:
-            braille.append(PUNCTUATION[letter])
-
         elif letter.lower() in LATIN and letter.isupper():
             braille.append(CONTROLS['NEXT_CAPITAL_LATIN'])
+            first_letter = first_letter or len(braille)
+
             braille.append(LATIN[letter.lower()])
             first_letter = first_letter or len(braille)
             state = 'latin' 
             used_latin = True
 
         elif letter in LATIN:
-            if state != 'latin' and state != '':
+            if state != 'latin' and (state != '' or used_russian):
                 braille.append(CONTROLS['NEXT_SMALL_LATIN'])
                 first_letter = first_letter or len(braille)
 
@@ -201,6 +203,7 @@ def text_to_braille(text: str) -> list:
 
         elif letter.lower() in RUSSIAN and letter.isupper():
             braille.append(CONTROLS['NEXT_CAPITAL_RUSSIAN'])
+            first_letter = first_letter or len(braille)
 
             braille.append(RUSSIAN[letter.lower()])
             first_letter = first_letter or len(braille)
@@ -208,7 +211,7 @@ def text_to_braille(text: str) -> list:
             used_russian = True
 
         elif letter in RUSSIAN:
-            if state != 'russian' and state != '':
+            if state != 'russian' and (state != '' or used_latin):
                 braille.append(CONTROLS['NEXT_SMALL_RUSSIAN'])
                 first_letter = first_letter or len(braille)
 
@@ -221,6 +224,7 @@ def text_to_braille(text: str) -> list:
             print(f'Letter `{letter}` is not supported, replacing on `?`')
             braille.append(PUNCTUATION['?'])
 
+    print(f'{first_letter=}')
     if first_letter is not None and used_latin and used_russian:
         first_letter -= 1
         letter = braille[first_letter]
