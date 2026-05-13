@@ -129,9 +129,9 @@ def test_transliteration():
 
 
 def test_full():
-
     pangramm_ru = '- Эх, йог зряч, съел мёд "Жуть дюн". Щипцы б в шкаф.' 
     pangramm_en = 'Sphinx of black quartz, judge my vow' 
+
     assert text_image_text(pangramm_ru, 'russian') == pangramm_ru
     assert text_image_text(pangramm_en) == pangramm_en
 

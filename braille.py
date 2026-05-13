@@ -31,7 +31,6 @@ NUMBERS = {
 SEPARATORS = {
     ' ': 'SPACE',
     '\n': 'NEWLINE',
-
 }
 
 PUNCTUATION = {
@@ -277,11 +276,11 @@ def braille_to_image(braille: list) -> Image.Image:
         image.paste(tile, (x, y))
         x += tile_w
 
-    image = image.convert('1')
+    image = image.convert('RGB')
     return image
 
 
-def braille_to_text(braille):
+def braille_to_text(braille: list) -> str:
     """Returns text from braille codes"""
     text = ''
     state = ''
@@ -340,6 +339,7 @@ def braille_to_text(braille):
 
 def image_to_braille(image: Image.Image, language: Language = 'latin') -> str:
     """Returns braille codes for image"""
+    image = image.convert('1')
     braille = list()
 
     tile_w, tile_h = 2, 3
@@ -397,7 +397,7 @@ def image_to_braille(image: Image.Image, language: Language = 'latin') -> str:
                     letters = [l for l in letters if l not in LATIN]
 
                 elif state == 'number':
-                    # Numbers ara written witn latin letters
+                    # Numbers are written witn latin letters
                     letters = [l for l in letters if l in LATIN]
 
                     if letters[0] not in NUMBERS.values():
